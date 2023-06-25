@@ -35,10 +35,10 @@ export class Grid {
   }
 
   GetWidth() {
-    return this.width;
+    return this.width - this.cellSize;
   }
 
   GetHeight() {
-    return this.height;
+    return this.height - this.cellSize;
   }
 }
