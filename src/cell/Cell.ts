@@ -5,18 +5,32 @@ enum State {
   ALIVE = 1,
 }
 
-class Cell {
+export class Cell {
   private size: number;
   private position: Point = [0, 0];
   private state: State;
+  private ctx: CanvasRenderingContext2D;
 
-  constructor(size: number, position: Point, state: State) {
+  constructor(
+    size: number,
+    position: Point,
+    state: State,
+    ctx: CanvasRenderingContext2D
+  ) {
     this.size = size;
     const [x, y] = position;
-    const xPos = Math.round(x / size) * size;
-    const yPos = Math.round(y / size) * size;
-    this.position[0] = xPos;
-    this.position[1] = yPos;
+    this.position[0] = x;
+    this.position[1] = y;
     this.state = state;
+    this.ctx = ctx;
+  }
+
+  Draw() {
+    const [x, y] = this.position;
+    this.ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
+  }
+
+  GetPosition(): Point {
+    return this.position;
   }
 }
