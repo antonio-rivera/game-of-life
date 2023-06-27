@@ -41,4 +41,8 @@ export class Grid {
   GetHeight() {
     return this.height - this.cellSize;
   }
+
+  GetCellSize() {
+    return this.cellSize;
+  }
 }
