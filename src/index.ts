@@ -11,8 +11,8 @@ const ctx = canvas.getContext("2d")!;
 const grid = new Grid(100, canvas.width, canvas.height, ctx);
 grid.Draw();
 
-const board = new Board(grid);
-console.log(board);
+const board = new Board(grid, ctx);
+//console.log(board);
 // ctx.fillRect(0, 400, 100, 100);
 let count = 0;
 while (count <= 10) {
@@ -20,8 +20,11 @@ while (count <= 10) {
   const y = Math.floor(Math.random() * board.GetY());
 
   const cell = new Cell(grid.GetCellSize(), [x, y], 1, ctx);
-  cell.Draw();
+  cell.Draw("green");
 
   board.SetCell(cell);
   count++;
 }
+console.log(board);
+
+board.Start();
