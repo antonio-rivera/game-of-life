@@ -8,14 +8,14 @@ canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 const ctx = canvas.getContext("2d")!;
 
-const grid = new Grid(100, canvas.width, canvas.height, ctx);
+const grid = new Grid(25, canvas.width, canvas.height, ctx);
 grid.Draw();
 
 const board = new Board(grid, ctx);
 //console.log(board);
 // ctx.fillRect(0, 400, 100, 100);
 let count = 0;
-while (count <= 10) {
+while (count <= 100) {
   const x = Math.floor(Math.random() * board.GetX());
   const y = Math.floor(Math.random() * board.GetY());
 
@@ -25,6 +25,12 @@ while (count <= 10) {
   board.SetCell(cell);
   count++;
 }
-console.log(board);
 
-board.Start();
+// requestAnimationFrame(() => board.OuterLoop(0));
+
+// board.Start(10000);
+Animate(board);
+
+function Animate(board: Board) {
+  board.Start(1000);
+}

@@ -6,6 +6,11 @@ enum State {
   ALIVE = 1,
 }
 
+export enum changed {
+  toDead = 0,
+  toAlive = 1,
+}
+
 export class Cell {
   private size: number;
   private position: Point = [0, 0];
@@ -29,13 +34,19 @@ export class Cell {
   Draw(color: string) {
     const [x, y] = this.position;
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
+    this.ctx.fillRect(
+      x * this.size + 1,
+      y * this.size + 1,
+      this.size - 2,
+      this.size - 2
+    );
+
+    requestAnimationFrame(() => this.Draw(color));
   }
 
-  Dies() {
-    const [x, y] = this.position;
-    this.Draw("white");
-  }
+  // Dies(color: string) {
+  //   requestAnimationFrame(() => this.Draw("white"))
+  // }
 
   GetPosition(): Point {
     return this.position;
@@ -79,16 +90,28 @@ export class Cell {
       }
     }
 
+    let change: changed = null;
     //GOL rules:
     if (aliveCells.length <= 1 && this.state === State.ALIVE) {
       this.state = State.DEAD;
-      this.Dies();
+      change = changed.toDead;
+      requestAnimationFrame(() => {
+        this.Draw("white");
+      });
     } else if (aliveCells.length === 3 && this.state === State.DEAD) {
       this.state = State.ALIVE;
-      this.Draw("green");
+      change = changed.toAlive;
+      requestAnimationFrame(() => {
+        this.Draw("green");
+      });
     } else if (aliveCells.length > 3 && this.state === State.ALIVE) {
       this.state = State.DEAD;
-      this.Dies();
+      change = changed.toDead;
+      requestAnimationFrame(() => {
+        this.Draw("white");
+      });
     }
+
+    //return change;
   }
 }
