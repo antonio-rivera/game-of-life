@@ -1,7 +1,6 @@
 import { Grid } from "./Grid";
 import { Cell } from "../cell/Cell";
 import { Point } from "../shapes/line";
-import { changed } from "../cell/Cell";
 
 var i = 0;
 var j = 0;
@@ -21,7 +20,13 @@ export class Board {
     for (let i = 0; i <= xLenght; i++) {
       this.values[i] = [];
       for (let j = 0; j <= yLenght; j++) {
-        this.values[i][j] = new Cell(this.grid.GetCellSize(), [i, j], 0, ctx);
+        this.values[i][j] = new Cell(
+          this.grid.GetCellSize(),
+          [i, j],
+          0,
+          "white",
+          ctx
+        );
       }
     }
 
@@ -69,15 +74,31 @@ export class Board {
       for (let i = 0; i < this.values.length; i++) {
         for (let j = 0; j < this.values[0].length; j++) {
           // setTimeout(() => {
-          //   requestAnimationFrame(() =>
+          // requestAnimationFrame(() =>
           this.values[i][j].SearchNeighbors(this);
           //   );
-          // }, 500 / 60);
+          // }, 1000 / 60);
         }
       }
 
+      // End of generation
+
+      this.GenerationalTransition();
+
       iters--;
     }
+  }
+
+  GenerationalTransition() {
+    // const genTransition = () => {
+    for (let i = 0; i < this.values.length; i++) {
+      for (let j = 0; j < this.values[0].length; j++) {
+        this.values[i][j].Transition();
+      }
+    }
+    // };
+
+    //requestAnimationFrame(genTransition);
   }
 
   //   Start(iters: number) {

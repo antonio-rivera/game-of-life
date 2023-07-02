@@ -1,14 +1,13 @@
 import { Board } from "../grid/Board";
 import { Point } from "../shapes/line";
 
+var frame = 0;
+var frameLimit = 2;
+var stop: number = undefined;
+
 enum State {
   DEAD = 0,
   ALIVE = 1,
-}
-
-export enum changed {
-  toDead = 0,
-  toAlive = 1,
 }
 
 export class Cell {
@@ -16,11 +15,14 @@ export class Cell {
   private position: Point = [0, 0];
   private state: State;
   private ctx: CanvasRenderingContext2D;
+  private color: string;
+  private liveNeighbors: Cell[] = [];
 
   constructor(
     size: number,
     position: Point,
     state: State,
+    color: string,
     ctx: CanvasRenderingContext2D
   ) {
     this.size = size;
@@ -28,25 +30,39 @@ export class Cell {
     this.position[0] = x;
     this.position[1] = y;
     this.state = state;
+    this.color = color;
     this.ctx = ctx;
   }
 
-  Draw(color: string) {
+  Draw() {
     const [x, y] = this.position;
-    this.ctx.fillStyle = color;
+    this.ctx.fillStyle = this.color;
+
     this.ctx.fillRect(
       x * this.size + 1,
       y * this.size + 1,
       this.size - 2,
       this.size - 2
     );
-
-    requestAnimationFrame(() => this.Draw(color));
   }
 
-  // Dies(color: string) {
-  //   requestAnimationFrame(() => this.Draw("white"))
-  // }
+  Animate() {
+    // console.log(frame);
+
+    // // if (frame >= 60) {
+    // //   cancelAnimationFrame(stop);
+    // //   return;
+    // // }
+
+    // frame++;
+    // if (frame % frameLimit === 0) {
+    //   this.Draw();
+    // }
+
+    this.Draw();
+
+    // stop = requestAnimationFrame(() => this.Animate());
+  }
 
   GetPosition(): Point {
     return this.position;
@@ -72,8 +88,6 @@ export class Cell {
       [x - 1, y - 1],
     ];
 
-    const aliveCells = [];
-
     for (const neighbor of neighbors) {
       const [xPos, yPos] = neighbor;
       if (xPos < 0 || yPos < 0) {
@@ -86,32 +100,35 @@ export class Cell {
 
       const neighborCell = board.GetCell([xPos, yPos]);
       if (neighborCell && neighborCell.IsAlive()) {
-        aliveCells.push(neighborCell);
+        this.liveNeighbors.push(neighborCell);
       }
     }
+  }
 
-    let change: changed = null;
+  Transition() {
+    // const transFunc = () => {
     //GOL rules:
-    if (aliveCells.length <= 1 && this.state === State.ALIVE) {
+    // requestAnimationFrame(() => this.Transition());
+
+    if (this.liveNeighbors.length <= 1 && this.state === State.ALIVE) {
       this.state = State.DEAD;
-      change = changed.toDead;
-      requestAnimationFrame(() => {
-        this.Draw("white");
-      });
-    } else if (aliveCells.length === 3 && this.state === State.DEAD) {
+      this.color = "white";
+      this.Animate();
+    } else if (this.liveNeighbors.length === 3 && this.state === State.DEAD) {
       this.state = State.ALIVE;
-      change = changed.toAlive;
-      requestAnimationFrame(() => {
-        this.Draw("green");
-      });
-    } else if (aliveCells.length > 3 && this.state === State.ALIVE) {
+      this.color = "green";
+      this.Animate();
+    } else if (this.liveNeighbors.length > 3 && this.state === State.ALIVE) {
       this.state = State.DEAD;
-      change = changed.toDead;
-      requestAnimationFrame(() => {
-        this.Draw("white");
-      });
+      this.color = "white";
+      this.Animate();
     }
 
-    //return change;
+    this.liveNeighbors = [];
+    // cancelAnimationFrame(stop);
+
+    // };
+
+    // requestAnimationFrame(transFunc);
   }
 }
