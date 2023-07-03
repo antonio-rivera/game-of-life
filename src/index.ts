@@ -15,7 +15,10 @@ window.addEventListener("load", () => {
   const board = new Board(grid, ctx);
 
   let count = 0;
-  while (count <= 499) {
+  let cellToGridRatio = 0.3;
+  let totalCells = Math.floor(cellToGridRatio * (board.GetX() * board.GetY()));
+
+  while (count <= totalCells) {
     const x = Math.floor(Math.random() * board.GetX());
     const y = Math.floor(Math.random() * board.GetY());
     CreateCell(x, y);
