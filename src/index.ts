@@ -13,8 +13,7 @@ window.addEventListener("load", () => {
   grid.Draw();
 
   const board = new Board(grid, ctx);
-  //console.log(board);
-  // ctx.fillRect(0, 400, 100, 100);
+
   let count = 0;
   while (count <= 499) {
     const x = Math.floor(Math.random() * board.GetX());
@@ -29,17 +28,5 @@ window.addEventListener("load", () => {
     board.SetCell(cell);
   }
 
-  // CreateCell(0, 2);
-  // CreateCell(1, 2);
-  // CreateCell(2, 2);
-
-  // requestAnimationFrame(() => board.OuterLoop(0));
-
   board.Start(1000);
-
-  // Animate(board);
-
-  // function Animate(board: Board) {
-  //   board.Start(1000);
-  // }
 });

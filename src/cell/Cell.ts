@@ -1,10 +1,6 @@
 import { Board } from "../grid/Board";
 import { Point } from "../shapes/line";
 
-var frame = 0;
-var frameLimit = 2;
-var stop: number = undefined;
-
 enum State {
   DEAD = 0,
   ALIVE = 1,
@@ -44,24 +40,6 @@ export class Cell {
       this.size - 2,
       this.size - 2
     );
-  }
-
-  Animate() {
-    // console.log(frame);
-
-    // // if (frame >= 60) {
-    // //   cancelAnimationFrame(stop);
-    // //   return;
-    // // }
-
-    // frame++;
-    // if (frame % frameLimit === 0) {
-    //   this.Draw();
-    // }
-
-    this.Draw();
-
-    // stop = requestAnimationFrame(() => this.Animate());
   }
 
   GetPosition(): Point {
@@ -106,29 +84,21 @@ export class Cell {
   }
 
   Transition() {
-    // const transFunc = () => {
     //GOL rules:
-    // requestAnimationFrame(() => this.Transition());
-
     if (this.liveNeighbors.length <= 1 && this.state === State.ALIVE) {
       this.state = State.DEAD;
       this.color = "white";
-      this.Animate();
+      this.Draw();
     } else if (this.liveNeighbors.length === 3 && this.state === State.DEAD) {
       this.state = State.ALIVE;
       this.color = "green";
-      this.Animate();
+      this.Draw();
     } else if (this.liveNeighbors.length > 3 && this.state === State.ALIVE) {
       this.state = State.DEAD;
       this.color = "white";
-      this.Animate();
+      this.Draw();
     }
 
     this.liveNeighbors = [];
-    // cancelAnimationFrame(stop);
-
-    // };
-
-    // requestAnimationFrame(transFunc);
   }
 }
