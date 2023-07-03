@@ -2,8 +2,10 @@ import { Grid } from "./Grid";
 import { Cell } from "../cell/Cell";
 import { Point } from "../shapes/line";
 
-var i = 0;
-var j = 0;
+//Global variable to animate the game
+const Sleep = (delay: number) =>
+  new Promise((resolve) => setTimeout(resolve, delay));
+
 export class Board {
   private values: Cell[][];
   private grid: Grid;
@@ -29,8 +31,6 @@ export class Board {
         );
       }
     }
-
-    //console.log(this.values);
   }
 
   GetX() {
@@ -69,20 +69,16 @@ export class Board {
     }
   }
 
-  Start(iters: number) {
+  async Start(iters: number) {
     while (iters > 0) {
       for (let i = 0; i < this.values.length; i++) {
         for (let j = 0; j < this.values[0].length; j++) {
-          // setTimeout(() => {
-          // requestAnimationFrame(() =>
           this.values[i][j].SearchNeighbors(this);
-          //   );
-          // }, 1000 / 60);
         }
       }
 
       // End of generation
-
+      await Sleep(200);
       this.GenerationalTransition();
 
       iters--;
@@ -90,56 +86,10 @@ export class Board {
   }
 
   GenerationalTransition() {
-    // const genTransition = () => {
     for (let i = 0; i < this.values.length; i++) {
       for (let j = 0; j < this.values[0].length; j++) {
         this.values[i][j].Transition();
       }
     }
-    // };
-
-    //requestAnimationFrame(genTransition);
   }
-
-  //   Start(iters: number) {
-  //     // for (let i = 0; i < this.values.length; i++) {
-  //     //   for (let j = 0; j < this.values[0].length; j++) {
-  //     //     this.values[i][j].SearchNeighbors(this);
-  //     //   }
-  //     // }
-
-  //     // requestAnimationFrame(() => this.Start());
-  //     if (iters > 0) {
-  //       requestAnimationFrame(() => this.OuterLoop(i, j));
-  //       iters--;
-  //       requestAnimationFrame(() => this.Start(iters));
-  //     }
-  //   }
-
-  //   OuterLoop(
-  //     i: number,
-  //     j: number,
-  //     xLen: number = this.values.length,
-  //     yLen: number = this.values[0].length
-  //   ) {
-  //     if (i < xLen) {
-  //       requestAnimationFrame(() => this.InnerLoop(i, j, yLen));
-
-  //       i++;
-  //       requestAnimationFrame(() => this.OuterLoop(i, xLen, yLen));
-  //     }
-  //   }
-
-  //   InnerLoop(i: number, j: number, yLen: number) {
-  //     if (j < yLen) {
-  //       this.values[i][j].SearchNeighbors(this);
-
-  //       j++;
-  //       requestAnimationFrame(() => this.InnerLoop(i, j, yLen));
-  //     }
-  //   }
-
-  //   // Animate() {
-  //   //   requestAnimationFrame(this.Start)
-  //   // }
 }
